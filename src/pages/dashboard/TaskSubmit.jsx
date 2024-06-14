@@ -1,27 +1,51 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { toast } from 'react-toastify';
 
 const TaskSubmit = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [deadline, setDeadline] = useState(new Date());
+  const [deadline, setDeadline] = useState(new Date('2024-06-14')); // Set default deadline
   const [file, setFile] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle task submission logic here
-    console.log('Task Submitted:', {
+
+    const taskData = {
       taskTitle,
       taskDescription,
-      deadline,
-      file: file ? file.name : 'No file uploaded',
-    });
-    // Clear the form
-    setTaskTitle('');
-    setTaskDescription('');
-    setDeadline(new Date());
-    setFile(null);
+      deadline: deadline.toISOString().split('T')[0], // Convert date to yyyy-MM-dd format
+      file: file ? { name: file.name, url: URL.createObjectURL(file) } : null,
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taskData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log(result);
+      toast.success('Task submitted successfully!');
+
+      // Reset form state after successful submission
+      setTaskTitle('');
+      setTaskDescription('');
+      setDeadline(new Date('2024-06-14')); // Reset deadline to default
+      setFile(null);
+
+    } catch (error) {
+      console.error('There was an error submitting the Task!', error);
+      toast.error('There was an error submitting the Task!');
+    }
   };
 
   return (
@@ -55,6 +79,18 @@ const TaskSubmit = () => {
               onChange={(date) => setDeadline(date)}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
               dateFormat="yyyy-MM-dd"
+              popperModifiers={{
+                preventOverflow: {
+                  enabled: true,
+                  escapeWithReference: false,
+                  boundariesElement: 'viewport',
+                },
+              }}
+              popperPlacement="bottom-start"
+              showYearDropdown
+              showMonthDropdown
+              dropdownMode="select"
+              placeholderText="YYYY-MM-DD"
             />
           </div>
           <div className="mb-4">
