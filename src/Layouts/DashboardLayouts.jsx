@@ -21,13 +21,15 @@ const SidebarMenu = () => {
       >
         {/* Sidebar content */}
         <div className="p-4 h-[90%]">
-          {/* Logo */}
-          <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+       <Link to='/dashboard' className="flex flex-row items-center gap-3 bg-green-900 p-3">
+       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M120-520v-320h320v320H120Zm0 400v-320h320v320H120Zm400-400v-320h320v320H520Zm0 400v-320h320v320H520ZM200-600h160v-160H200v160Zm400 0h160v-160H600v160Zm0 400h160v-160H600v160Zm-400 0h160v-160H200v160Zm400-400Zm0 240Zm-240 0Zm0-240Z"/></svg>
+       <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+       </Link>
           {/* Menu items */}
           <ul className="mt-6 flex flex-col justify-end h-full">
             <li>
               <Link
-                to="/profile"
+                to="profile"
                 className="flex flex-row  gap-2 items-center py-2 px-4 text-sm rounded hover:bg-gray-200 hover:text-[#333]"
               >
                  
@@ -37,7 +39,7 @@ const SidebarMenu = () => {
             </li>
             <li>
               <Link
-                to="/task-manager"
+                to="task-manager"
                 className="flex flex-row  gap-2 items-center py-2 px-4 text-sm rounded hover:bg-gray-200 hover:text-[#333]"
               >
                 
@@ -47,7 +49,7 @@ const SidebarMenu = () => {
             </li>
             <li>
               <Link
-                to="/system-update"
+                to="task-update"
                 className="flex flex-row  gap-2 items-center py-2 px-4 text-sm rounded hover:bg-gray-200 hover:text-[#333]"
               >
                <span>Task Update</span>  
@@ -127,9 +129,9 @@ const SidebarMenu = () => {
               </svg>
             )}
           </button>
-          <h1 className="text-lg font-semibold">Dashboard</h1>
+          <h1 className="text-lg font-semibold">Welcome, Today</h1>
           {/* Profile section */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 py-4">
             <Link to="/profile" className="flex items-center space-x-2">
              {user?.emailVerified ?(<img
                 src={user?.photoURL}
