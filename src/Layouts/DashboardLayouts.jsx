@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const SidebarMenu = () => {
-  const {user}= useAuth();
+  const {user,loading,setLoading}= useAuth();
   const [isOpen, setIsOpen] = useState(false);
   
   const toggleMenu = () => {
     setIsOpen(!isOpen);
     };
   console.log(user)
+  useEffect(() => {
+    setLoading(true);
+    // Example: Fetch user data or perform necessary operations
+    setTimeout(() => {
+      setLoading(false); // Simulated loading done
+    }, 2000); // Simulate loading for 2 seconds
+  }, []); // Only run once on component mount
 
+ 
+  if(loading){
+    return <LoadingSpinner/>
+  }
   return (
     <div className="flex h-[100vh] overflow-hidden">
       {/* Sidebar */}
@@ -45,6 +57,15 @@ const SidebarMenu = () => {
                 
                 <span>Task Manager</span>
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" className="fill-current w-4 h-4 mr-2 transition-colors duration-300"><path d="m438-240 226-226-58-58-169 169-84-84-57 57 142 142ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="task-submit"
+                className="flex flex-row  gap-2 items-center py-2 px-4 text-sm rounded hover:bg-gray-200 hover:text-[#333]"
+              >
+               <span>Task Submit</span>  
+               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" className="fill-current w-4 h-4 mr-2 transition-colors duration-300"><path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
               </Link>
             </li>
             <li>

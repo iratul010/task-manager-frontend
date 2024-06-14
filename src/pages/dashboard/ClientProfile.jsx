@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const ClientProfile = () => {
-  const { user } = useAuth();
+  const { user  } = useAuth();
   const [isEditing, setIsEditing] = useState(false); // State to track edit mode
   const [displayName, setDisplayName] = useState(user ? user.displayName : '');
   const [phoneNumber, setPhoneNumber] = useState(user ? user.phoneNumber || '' : '');

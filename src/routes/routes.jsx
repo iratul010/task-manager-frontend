@@ -61,6 +61,12 @@ export const router = createBrowserRouter([
     ,
     {
        
+       path:"task-submit",
+       element:<TaskSubmit/>
+    }
+    ,
+    {
+       
        path:"task-update",
        element:<TaskUpdate/>
     }
