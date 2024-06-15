@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
+import  { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const Register = () => {
-  const { googleLogin,loading} = useAuth();
+  const { googleLogin,loading,createUser} = useAuth();
  
   const handleGoogleSignIn = () => {
      googleLogin();
@@ -15,7 +15,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [image, setImage] = useState(null);
+ 
   const [error, setError] = useState("");
   const [usernameFocused, setUsernameFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
@@ -24,12 +24,12 @@ const Register = () => {
 
   const formRef = useRef(null);
 
-  const handleRegister = (e) => {
+  const handleRegister = async(e) => {
 
     e.preventDefault();
 
     // Basic validation
-    if (!username || !email || !password || !confirmPassword || !image) {
+    if (!username.trim() || !password.trim() || !confirmPassword.trim() || !email.trim()) {
       setError("Please fill out all fields.");
       return;
     }
@@ -38,10 +38,29 @@ const Register = () => {
       setError("Passwords do not match.");
       return;
     }
+    
 
-    // Replace with your actual registration logic (e.g., API call)
+
+   await createUser(email,password,username).then(user=>{
+ 
+    if(user?.email){
+     const userInfo ={
+       email:user?.email,
+       name:username
+     }
+    fetch('http://localhost:5000/user',{
+     method:'POST',
+     headers:{
+       'Content-type':'application/json',
+     },
+     body:JSON.stringify(userInfo)
+    })
+    }
+
+ })
+ 
     // For demonstration, log the inputs
-    console.log("Registration successful!", { username, email, password, image });
+    console.log("Registration successful!", { username, email, password});
     setError("");
     
     // Reset form and state
@@ -50,12 +69,10 @@ const Register = () => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
-    setImage(null);
+  
   };
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
+ 
  if(loading){
   return <LoadingSpinner/>
  }
@@ -63,7 +80,7 @@ const Register = () => {
     <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 px-4 lg:px-0">
       <div className="flex flex-col items-center justify-center w-full lg:w-1/3 bg-white shadow-md rounded-lg p-6 lg:p-12">
         <h2 className="lg:text-4xl text-3xl font-bold pb-4 text-red-400">Register</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        
         <form ref={formRef} onSubmit={handleRegister} className="w-full">
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700 font-bold mb-2">
@@ -101,7 +118,7 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label htmlFor="image" className="block text-gray-700 font-bold mb-2">
               Profile Image
             </label>
@@ -113,7 +130,7 @@ const Register = () => {
               className="appearance-none border-b-2 border-gray-500 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
               required
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 font-bold mb-2">
               Password
@@ -150,6 +167,7 @@ const Register = () => {
               required
             />
           </div>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="flex items-center justify-between">
             <button
               type="submit"

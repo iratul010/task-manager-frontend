@@ -1,13 +1,15 @@
 import {
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { app } from "../firebase/firebase.config";
-
+ 
 export const AuthContext = createContext(null);
 const auth = getAuth(app);
 
@@ -26,6 +28,7 @@ const AuthProvider = ({ children }) => {
       .then((result) => {
         setUser(result.user);
         setLoading(false);  
+        return result
       })
       .catch((error) => {
         console.error("Login failed: ", error);
@@ -47,6 +50,31 @@ const AuthProvider = ({ children }) => {
       return unsubscribe();
     };
   }, []);
+
+  //createUserWithEmail&Pass
+  const createUser = async (email, password, username) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log('userCredential',userCredential)
+      const user = userCredential.user;
+      console.log('user',user)
+      setUser(user)
+      
+      // Set display name for the user
+      await updateProfile(user, {
+        displayName: username,
+  
+      });
+  
+     
+      return user;
+    } catch (error) {
+      console.error("Error creating user: ", error);
+      throw error;  
+    }
+  };
+
+  //Logout
   const logOut = async () => {
     setLoading(true);  
     return signOut(auth)
@@ -59,7 +87,7 @@ const AuthProvider = ({ children }) => {
         setLoading(false); 
       });
   };
-  const authInfo = { googleLogin, user,logOut,loading,setLoading};
+  const authInfo = { googleLogin,setLoading, user,logOut,loading,setLoading, createUser};
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );

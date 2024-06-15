@@ -1,12 +1,35 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Login = () => {
-  const { googleLogin} = useAuth();
+  const { googleLogin,setLoading,loading} = useAuth();
  
   const handleGoogleSignIn = () => {
-     googleLogin();
+    googleLogin().then(data=>{
+ 
+         console.log(data)
+         if(data?.user?.email){
+          const userInfo ={
+            email:data?.user?.email,
+            name:data?.user?.displayName
+          }
+         fetch('http://localhost:5000/user',{
+          method:'POST',
+          headers:{
+            'Content-type':'application/json',
+          },
+          body:JSON.stringify(userInfo)
+         })
+         }
+ 
+      })
+      .catch((error) => {
+        console.error("Login failed: ", error);
+        setLoading(false);  
+ 
+     });
   };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +57,9 @@ const Login = () => {
       setError("Invalid email or password.");
     }
   };
-
+if(loading){
+  return <LoadingSpinner/>
+}
   return (
     <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 px-4 lg:px-0">
       {/* Left Column: Login Form */}

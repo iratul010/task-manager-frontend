@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "./LoadingSpinner";
+ 
 
 const Navbar = () => {
   const {user,loading,logOut} = useAuth();
-  console.log(user)
+ 
  const handleLogOut = ()=>{
   logOut();
  }
-
+ 
   if(loading){
       return <LoadingSpinner/>
   }
@@ -64,7 +65,7 @@ const Navbar = () => {
           <li>
             <Link>About</Link>
           </li>
-          {user?.emailVerified &&
+          {user?.email &&
           <>
            <li>
             <Link to='/dashboard'>Dashboard</Link>
@@ -76,7 +77,7 @@ const Navbar = () => {
           
           }
          {
-          !user?.emailVerified && <>
+          !user?.email && <>
            <li>
             <Link to='/login'>Login</Link>
           </li>
