@@ -211,7 +211,7 @@ const SidebarMenu = () => {
           <h1 className="text-lg font-semibold">Welcome, Today</h1>
           {/* Profile section */}
           <div className="flex items-center space-x-4 py-4">
-            <Link to="/profile" className="flex items-center space-x-2">
+            <Link to="profile" className="flex items-center space-x-2">
               {userInfo?.email ? (
                 <img
                   src={userInfo?.photoURL}

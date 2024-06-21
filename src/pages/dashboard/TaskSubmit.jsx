@@ -97,6 +97,7 @@ const TaskSubmit = () => {
             <label className="block text-gray-700">File Upload (Optional)</label>
             <input
               type="file"
+              accept="application/pdf, .doc, .docx, image/*" 
               onChange={(e) => setFile(e.target.files[0])}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
             />
